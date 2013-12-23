@@ -22,6 +22,7 @@
 		F584CA301867F6A600CD518E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F584CA0F1867F6A600CD518E /* UIKit.framework */; };
 		F584CA381867F6A600CD518E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F584CA361867F6A600CD518E /* InfoPlist.strings */; };
 		F584CA3A1867F6A600CD518E /* ESBeaconTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F584CA391867F6A600CD518E /* ESBeaconTests.m */; };
+		F58736E01867F84E00AD2458 /* ESBeacon.m in Sources */ = {isa = PBXBuildFile; fileRef = F58736DF1867F84E00AD2458 /* ESBeacon.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,8 @@
 		F584CA351867F6A600CD518E /* ESBeaconTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ESBeaconTests-Info.plist"; sourceTree = "<group>"; };
 		F584CA371867F6A600CD518E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F584CA391867F6A600CD518E /* ESBeaconTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ESBeaconTests.m; sourceTree = "<group>"; };
+		F58736DE1867F84E00AD2458 /* ESBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESBeacon.h; sourceTree = "<group>"; };
+		F58736DF1867F84E00AD2458 /* ESBeacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESBeacon.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +123,8 @@
 				F584CA201867F6A600CD518E /* Main_iPad.storyboard */,
 				F584CA231867F6A600CD518E /* ESBeaconViewController.h */,
 				F584CA241867F6A600CD518E /* ESBeaconViewController.m */,
+				F58736DE1867F84E00AD2458 /* ESBeacon.h */,
+				F58736DF1867F84E00AD2458 /* ESBeacon.m */,
 				F584CA261867F6A600CD518E /* Images.xcassets */,
 				F584CA121867F6A600CD518E /* Supporting Files */,
 			);
@@ -255,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F584CA1C1867F6A600CD518E /* ESBeaconAppDelegate.m in Sources */,
+				F58736E01867F84E00AD2458 /* ESBeacon.m in Sources */,
 				F584CA251867F6A600CD518E /* ESBeaconViewController.m in Sources */,
 				F584CA181867F6A600CD518E /* main.m in Sources */,
 			);
@@ -475,6 +481,7 @@
 				F584CA3F1867F6A600CD518E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F584CA401867F6A600CD518E /* Build configuration list for PBXNativeTarget "ESBeaconTests" */ = {
 			isa = XCConfigurationList;
@@ -483,6 +490,7 @@
 				F584CA421867F6A600CD518E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
