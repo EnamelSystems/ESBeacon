@@ -7,9 +7,11 @@
 //
 
 #import "ESBeaconViewController.h"
+#import "ESBeacon.h"
+#import "UIColor-RGB.h"
 
 @interface ESBeaconViewController ()
-
+@property (nonatomic, weak) ESBeacon *beacon;
 @end
 
 @implementation ESBeaconViewController
@@ -17,7 +19,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    
+    //self.view.backgroundColor = RGB(91, 156, 187);
+    self.view.backgroundColor = RGB(143, 201, 213);
+    
+    self.beacon = [ESBeacon sharedManager];
 }
 
 - (void)didReceiveMemoryWarning

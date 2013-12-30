@@ -9,5 +9,5 @@
 #import <Foundation/Foundation.h>
 
 @interface ESBeacon : NSObject
-
++ (ESBeacon *)sharedManager;
 @end

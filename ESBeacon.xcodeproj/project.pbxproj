@@ -58,6 +58,7 @@
 		F584CA391867F6A600CD518E /* ESBeaconTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ESBeaconTests.m; sourceTree = "<group>"; };
 		F58736DE1867F84E00AD2458 /* ESBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESBeacon.h; sourceTree = "<group>"; };
 		F58736DF1867F84E00AD2458 /* ESBeacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESBeacon.m; sourceTree = "<group>"; };
+		F5BE11EB1871E8F500FC1A5C /* UIColor-RGB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor-RGB.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +88,7 @@
 		F584C9FF1867F6A600CD518E = {
 			isa = PBXGroup;
 			children = (
+				F5BE11EA1871E8F500FC1A5C /* UIColor-RGB */,
 				F584CA111867F6A600CD518E /* ESBeacon */,
 				F584CA331867F6A600CD518E /* ESBeaconTests */,
 				F584CA0A1867F6A600CD518E /* Frameworks */,
@@ -158,6 +160,14 @@
 				F584CA361867F6A600CD518E /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F5BE11EA1871E8F500FC1A5C /* UIColor-RGB */ = {
+			isa = PBXGroup;
+			children = (
+				F5BE11EB1871E8F500FC1A5C /* UIColor-RGB.h */,
+			);
+			path = "UIColor-RGB";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
