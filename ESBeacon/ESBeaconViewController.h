@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ESBeacon.h"
 
-@interface ESBeaconViewController : UIViewController
-
+@interface ESBeaconViewController : UIViewController <ESBeaconDelegate, UITableViewDataSource, UITableViewDelegate>
+@property (weak, nonatomic) IBOutlet UIButton *monitoringButton;
+@property (weak, nonatomic) IBOutlet UILabel *bluetoothLabel;
+@property (weak, nonatomic) IBOutlet UILabel *authorizationLabel;
+- (IBAction)monitoringButtonPressed:(id)sender;
 @end

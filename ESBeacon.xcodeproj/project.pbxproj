@@ -23,6 +23,8 @@
 		F584CA381867F6A600CD518E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F584CA361867F6A600CD518E /* InfoPlist.strings */; };
 		F584CA3A1867F6A600CD518E /* ESBeaconTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F584CA391867F6A600CD518E /* ESBeaconTests.m */; };
 		F58736E01867F84E00AD2458 /* ESBeacon.m in Sources */ = {isa = PBXBuildFile; fileRef = F58736DF1867F84E00AD2458 /* ESBeacon.m */; };
+		F5FB8CF91871F28A002D1CA1 /* ESGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FB8CF81871F28A002D1CA1 /* ESGradientView.m */; };
+		F5FB8CFC1872651E002D1CA1 /* ESBeaconRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FB8CFB1872651E002D1CA1 /* ESBeaconRegion.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +61,10 @@
 		F58736DE1867F84E00AD2458 /* ESBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESBeacon.h; sourceTree = "<group>"; };
 		F58736DF1867F84E00AD2458 /* ESBeacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESBeacon.m; sourceTree = "<group>"; };
 		F5BE11EB1871E8F500FC1A5C /* UIColor-RGB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor-RGB.h"; sourceTree = "<group>"; };
+		F5FB8CF71871F28A002D1CA1 /* ESGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESGradientView.h; sourceTree = "<group>"; };
+		F5FB8CF81871F28A002D1CA1 /* ESGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESGradientView.m; sourceTree = "<group>"; };
+		F5FB8CFA1872651E002D1CA1 /* ESBeaconRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESBeaconRegion.h; sourceTree = "<group>"; };
+		F5FB8CFB1872651E002D1CA1 /* ESBeaconRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESBeaconRegion.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,8 +131,12 @@
 				F584CA201867F6A600CD518E /* Main_iPad.storyboard */,
 				F584CA231867F6A600CD518E /* ESBeaconViewController.h */,
 				F584CA241867F6A600CD518E /* ESBeaconViewController.m */,
+				F5FB8CF71871F28A002D1CA1 /* ESGradientView.h */,
+				F5FB8CF81871F28A002D1CA1 /* ESGradientView.m */,
 				F58736DE1867F84E00AD2458 /* ESBeacon.h */,
 				F58736DF1867F84E00AD2458 /* ESBeacon.m */,
+				F5FB8CFA1872651E002D1CA1 /* ESBeaconRegion.h */,
+				F5FB8CFB1872651E002D1CA1 /* ESBeaconRegion.m */,
 				F584CA261867F6A600CD518E /* Images.xcassets */,
 				F584CA121867F6A600CD518E /* Supporting Files */,
 			);
@@ -218,6 +228,13 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Enamel Systems";
 				TargetAttributes = {
+					F584CA071867F6A600CD518E = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
 					F584CA2B1867F6A600CD518E = {
 						TestTargetID = F584CA071867F6A600CD518E;
 					};
@@ -271,8 +288,10 @@
 			files = (
 				F584CA1C1867F6A600CD518E /* ESBeaconAppDelegate.m in Sources */,
 				F58736E01867F84E00AD2458 /* ESBeacon.m in Sources */,
+				F5FB8CF91871F28A002D1CA1 /* ESGradientView.m in Sources */,
 				F584CA251867F6A600CD518E /* ESBeaconViewController.m in Sources */,
 				F584CA181867F6A600CD518E /* main.m in Sources */,
+				F5FB8CFC1872651E002D1CA1 /* ESBeaconRegion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
