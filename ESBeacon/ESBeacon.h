@@ -10,6 +10,8 @@
 @import CoreLocation;
 @import CoreBluetooth;
 
+#import "ESBeaconRegion.h"
+
 typedef enum {
         kESBeaconMonitoringStatusDisabled,
         kESBeaconMonitoringStatusStopped,
@@ -20,19 +22,18 @@ typedef enum {
 
 @protocol ESBeaconDelegate <NSObject>
 @optional
-- (void)didUpdateMonitoringStatus:(ESBeaconMonitoringStatus)status;
 - (void)didUpdatePeripheralState:(CBPeripheralManagerState)state;
 - (void)didUpdateAuthorizationStatus:(CLAuthorizationStatus)status;
+- (void)didUpdateMonitoringStatus:(ESBeaconMonitoringStatus)status;
 @end
 
-@interface ESBeacon : NSObject <CLLocationManagerDelegate, CBPeripheralManagerDelegate>
-@property (nonatomic, weak) id<ESBeaconDelegate> delegate;
+@interface ESBeacon : NSObject <CBPeripheralManagerDelegate, CLLocationManagerDelegate>
 @property (nonatomic) NSMutableArray *regions;
+@property (nonatomic, weak) id<ESBeaconDelegate> delegate;
 
 + (ESBeacon *)sharedManager;
 - (void)requestUpdateForStatus;
 - (void)startMonitoring;
 - (void)stopMonitoring;
-
 - (BOOL)registerRegion:(NSString *)UUIDString identifier:(NSString *)identifier rangingEnabled:(BOOL)rangingEnabled;
 @end

@@ -7,16 +7,15 @@
 //
 
 #import "ESBeacon.h"
-#import "ESBeaconRegion.h"
 
 @interface ESBeacon ()
 @property (nonatomic) CBPeripheralManager *peripheralManager;
 @property (nonatomic) CLLocationManager *locationManager;
 
-@property (nonatomic) ESBeaconMonitoringStatus monitoringStatus;
 @property (nonatomic) CBPeripheralManagerState peripheralState;
 @property (nonatomic) CLAuthorizationStatus authorizationStatus;
 
+@property (nonatomic) ESBeaconMonitoringStatus monitoringStatus;
 @property (nonatomic) BOOL isMonitoring;
 
 @end
@@ -38,6 +37,7 @@
 - (id)initSharedInstance {
     self = [super init];
     if (self) {
+        // Initialization of ESBeacon singleton.
         _monitoringStatus = kESBeaconMonitoringStatusDisabled;
         _isMonitoring = NO;
         
@@ -46,10 +46,14 @@
         
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
-        
         _authorizationStatus = kCLAuthorizationStatusNotDetermined;
         
         _regions = [[NSMutableArray alloc] init];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(applicationDidBecomeActive)
+                                                     name:@"applicationDidBecomeActive"
+                                                   object:nil];
     }
     return self;
 }
@@ -57,6 +61,17 @@
 - (id)init {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
+}
+
+#pragma mark applicationDidBecomActive local notification handler.
+- (void)applicationDidBecomeActive
+{
+    NSLog(@"Application did become active");
+    
+    for (ESBeaconRegion *region in self.regions) {
+        // Update current region status when application did become active.
+        [self.locationManager requestStateForRegion:region];
+    }
 }
 
 - (BOOL)isMonitoringCapable

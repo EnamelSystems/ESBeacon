@@ -61,14 +61,17 @@
     switch (status) {
         case kESBeaconMonitoringStatusDisabled:
             [self.monitoringButton setTitle:@"Disabled" forState:UIControlStateNormal];
+            [self.monitoringButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             self.monitoringButton.enabled = NO;
             break;
         case kESBeaconMonitoringStatusStopped:
             [self.monitoringButton setTitle:@"Start Monitoring" forState:UIControlStateNormal];
+            [self.monitoringButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             self.monitoringButton.enabled = YES;
             break;
         case kESBeaconMonitoringStatusMonitoring:
-            [self.monitoringButton setTitle:@"Monitoring (Press for Stop)" forState:UIControlStateNormal];
+            [self.monitoringButton setTitle:@"Monitoring (Press to Stop)" forState:UIControlStateNormal];
+            [self.monitoringButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
             self.monitoringButton.enabled = YES;
             break;
     }
@@ -76,10 +79,25 @@
 
 - (void)didUpdatePeripheralState:(CBPeripheralManagerState)state
 {
-    if (state == CBPeripheralManagerStatePoweredOn) {
-        self.bluetoothLabel.text = @"Bluetooth: On";
-    } else {
-        self.bluetoothLabel.text = @"Bluetooth: Off";
+    switch (state) {
+        case CBPeripheralManagerStateUnsupported:
+            self.bluetoothLabel.text = @"Bluetooth: Unsupported";
+            break;
+        case CBPeripheralManagerStatePoweredOn:
+            self.bluetoothLabel.text = @"Bluetooth: On";
+            break;
+        case CBPeripheralManagerStatePoweredOff:
+            self.bluetoothLabel.text = @"Bluetooth: Off";
+            break;
+        case CBPeripheralManagerStateUnauthorized:
+            self.bluetoothLabel.text = @"Bluetooth: Unauthorized";
+            break;
+        case CBPeripheralManagerStateResetting:
+            self.bluetoothLabel.text = @"Bluetooth: Resetting";
+            break;
+        case CBPeripheralManagerStateUnknown:
+            self.bluetoothLabel.text = @"Bluetooth: Unknown";
+            break;
     }
 }
 
@@ -99,29 +117,6 @@
             self.authorizationLabel.text = @"Authorization: On";
             break;
     }
-}
-
-#pragma mark UITableViewDelegate
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 0;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return 0;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell= [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    ;
 }
 
 @end
