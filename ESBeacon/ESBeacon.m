@@ -47,8 +47,8 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidBecomeActive)
-                                                     name:@"applicationDidBecomeActive"
-                                                   object:nil];
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                  object:nil];
     }
     return self;
 }
@@ -62,10 +62,19 @@
 - (void)applicationDidBecomeActive
 {
     NSLog(@"Application did become active");
-    
+    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(checkRegionStateTimer:) userInfo:nil repeats:NO];
+}
+
+- (void)checkRegionStateTimer:(NSTimer *)timer
+{
+    NSLog(@"timer called");
+
+    // Update current region status when application did become active.
     for (ESBeaconRegion *region in self.regions) {
-        // Update current region status when application did become active.
-        [self.locationManager requestStateForRegion:region];
+        if (region.isMonitoring) {
+            NSLog(@"requestStateForRegion %@", region);
+            [_locationManager requestStateForRegion:region];
+        }
     }
 }
 
