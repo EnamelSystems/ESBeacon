@@ -12,9 +12,6 @@
 @property (nonatomic) CBPeripheralManager *peripheralManager;
 @property (nonatomic) CLLocationManager *locationManager;
 
-@property (nonatomic) CBPeripheralManagerState peripheralState;
-@property (nonatomic) CLAuthorizationStatus authorizationStatus;
-
 @property (nonatomic) ESBeaconMonitoringStatus monitoringStatus;
 @property (nonatomic) BOOL isMonitoring;
 
@@ -42,11 +39,9 @@
         _isMonitoring = NO;
         
         _peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil];
-        _peripheralState = _peripheralManager.state;
         
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
-        _authorizationStatus = kCLAuthorizationStatusNotDetermined;
         
         _regions = [[NSMutableArray alloc] init];
         
@@ -79,10 +74,12 @@
     if (![CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]]) {
         return NO;
     }
-    if (_peripheralState != CBPeripheralManagerStatePoweredOn) {
+    if (_peripheralManager.state != CBPeripheralManagerStatePoweredOn) {
         return NO;
     }
-    if (_authorizationStatus == kCLAuthorizationStatusDenied || _authorizationStatus == kCLAuthorizationStatusRestricted) {
+    
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied ||
+        [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted) {
         return NO;
     }
     return YES;
@@ -154,10 +151,10 @@
         [_delegate didUpdateMonitoringStatus:self.monitoringStatus];
     }
     if ([_delegate respondsToSelector:@selector(didUpdatePeripheralState:)]) {
-        [_delegate didUpdatePeripheralState:self.peripheralState];
+        [_delegate didUpdatePeripheralState:self.peripheralManager.state];
     }
     if ([_delegate respondsToSelector:@selector(didUpdateAuthorizationStatus:)]) {
-        [_delegate didUpdateAuthorizationStatus:self.authorizationStatus];
+        [_delegate didUpdateAuthorizationStatus:[CLLocationManager authorizationStatus]];
     }
 }
 
@@ -282,8 +279,6 @@
 {
     NSLog(@"peripheralManagerDidUpdateState: %@", [self peripheralStateString:peripheral.state]);
 
-    _peripheralState = peripheral.state;
-    
     if ([_delegate respondsToSelector:@selector(didUpdatePeripheralState:)]) {
         [_delegate didUpdatePeripheralState:peripheral.state];
     }
@@ -392,8 +387,6 @@
 {
     NSLog(@"locationManager didChangeAuthorizationStatus %@", [self locationAuthorizationStatusString:status]);
 
-    _authorizationStatus = status;
-    
     if ([_delegate respondsToSelector:@selector(didUpdateAuthorizationStatus:)]) {
         [_delegate didUpdateAuthorizationStatus:status];
     }
