@@ -23,6 +23,7 @@
 		F584CA381867F6A600CD518E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F584CA361867F6A600CD518E /* InfoPlist.strings */; };
 		F584CA3A1867F6A600CD518E /* ESBeaconTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F584CA391867F6A600CD518E /* ESBeaconTests.m */; };
 		F58736E01867F84E00AD2458 /* ESBeacon.m in Sources */ = {isa = PBXBuildFile; fileRef = F58736DF1867F84E00AD2458 /* ESBeacon.m */; };
+		F5F0DFAD187778170055FD9D /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F5F0DFAC187778170055FD9D /* icon.png */; };
 		F5FB8CF91871F28A002D1CA1 /* ESGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FB8CF81871F28A002D1CA1 /* ESGradientView.m */; };
 		F5FB8CFC1872651E002D1CA1 /* ESBeaconRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FB8CFB1872651E002D1CA1 /* ESBeaconRegion.m */; };
 /* End PBXBuildFile section */
@@ -61,6 +62,7 @@
 		F58736DE1867F84E00AD2458 /* ESBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESBeacon.h; sourceTree = "<group>"; };
 		F58736DF1867F84E00AD2458 /* ESBeacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESBeacon.m; sourceTree = "<group>"; };
 		F5BE11EB1871E8F500FC1A5C /* UIColor-RGB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor-RGB.h"; sourceTree = "<group>"; };
+		F5F0DFAC187778170055FD9D /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = Resources/icon.png; sourceTree = SOURCE_ROOT; };
 		F5FB8CF71871F28A002D1CA1 /* ESGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESGradientView.h; sourceTree = "<group>"; };
 		F5FB8CF81871F28A002D1CA1 /* ESGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESGradientView.m; sourceTree = "<group>"; };
 		F5FB8CFA1872651E002D1CA1 /* ESBeaconRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESBeaconRegion.h; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 		F584CA121867F6A600CD518E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F5F0DFAC187778170055FD9D /* icon.png */,
 				F584CA131867F6A600CD518E /* ESBeacon-Info.plist */,
 				F584CA141867F6A600CD518E /* InfoPlist.strings */,
 				F584CA171867F6A600CD518E /* main.m */,
@@ -265,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F584CA221867F6A600CD518E /* Main_iPad.storyboard in Resources */,
+				F5F0DFAD187778170055FD9D /* icon.png in Resources */,
 				F584CA271867F6A600CD518E /* Images.xcassets in Resources */,
 				F584CA1F1867F6A600CD518E /* Main_iPhone.storyboard in Resources */,
 				F584CA161867F6A600CD518E /* InfoPlist.strings in Resources */,
