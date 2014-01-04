@@ -34,7 +34,7 @@
     }
 
     // To enable automatic start, uncomment this line.
-    //[self.beacon startMonitoring];
+    [self.beacon startMonitoring];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
@@ -195,22 +195,24 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"tableHeaderCell"];
     ESBeaconRegion *region = [self.beacon.regions objectAtIndex:section];
     if (region) {
-        UILabel *UUIDLabel = (UILabel *)[cell viewWithTag:1];
-        UILabel *majorLabel = (UILabel *)[cell viewWithTag:2];
-        UILabel *minorLabel = (UILabel *)[cell viewWithTag:3];
-        UIImageView *monitoring = (UIImageView *)[cell viewWithTag:4];
-        UIImageView *entered = (UIImageView *)[cell viewWithTag:5];
+        UILabel *identifierLabel = (UILabel *)[cell viewWithTag:1];
+        UILabel *UUIDLabel = (UILabel *)[cell viewWithTag:2];
+        UILabel *majorLabel = (UILabel *)[cell viewWithTag:3];
+        UILabel *minorLabel = (UILabel *)[cell viewWithTag:4];
+        UIImageView *monitoring = (UIImageView *)[cell viewWithTag:5];
+        UIImageView *entered = (UIImageView *)[cell viewWithTag:6];
+        identifierLabel.text = region.identifier;
         UUIDLabel.adjustsFontSizeToFitWidth = YES;
         UUIDLabel.text = region.proximityUUID.UUIDString;
         if (region.major) {
             majorLabel.text = [NSString stringWithFormat:@"major: %@", region.major];
         } else {
-            majorLabel.text = @"major: nil";
+            majorLabel.text = @"major: any";
         }
         if (region.minor) {
             minorLabel.text = [NSString stringWithFormat:@"minor: %@", region.minor];
         } else {
-            minorLabel.text = @"minor: nil";
+            minorLabel.text = @"minor: any";
         }
         if (region.isMonitoring) {
             monitoring.image = [UIImage imageNamed:@"green.png"];
