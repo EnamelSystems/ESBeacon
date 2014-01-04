@@ -9,7 +9,6 @@
 #import "ESGradientView.h"
 #import "UIColor-RGB.h"
 
-//#define START_COLOR    RGB( 91, 156, 187)
 #define START_COLOR    RGB( 81, 146, 187)
 #define END_COLOR      RGB(143, 201, 213)
 

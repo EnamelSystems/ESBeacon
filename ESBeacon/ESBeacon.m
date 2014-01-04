@@ -11,10 +11,9 @@
 @interface ESBeacon ()
 @property (nonatomic) CBPeripheralManager *peripheralManager;
 @property (nonatomic) CLLocationManager *locationManager;
-
 @property (nonatomic) ESBeaconMonitoringStatus monitoringStatus;
+@property (nonatomic) BOOL monitoringEnabled;
 @property (nonatomic) BOOL isMonitoring;
-
 @end
 
 @implementation ESBeacon
@@ -36,8 +35,9 @@
     if (self) {
         // Initialization of ESBeacon singleton.
         _monitoringStatus = kESBeaconMonitoringStatusDisabled;
+        _monitoringEnabled = NO;
         _isMonitoring = NO;
-        
+
         _peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil];
         
         _locationManager = [[CLLocationManager alloc] init];
@@ -90,15 +90,27 @@
     return YES;
 }
 
+- (void)startMonitoring
+{
+    self.monitoringEnabled = YES;
+    [self startMonitoringAllRegion];
+}
+
+- (void)stopMonitoring
+{
+    self.monitoringEnabled = NO;
+    [self stopMonitoringAllRegion];
+}
+
 - (void)startMonitoringAllRegion
 {
-    if (![self isMonitoringCapable]) {
+    if (! self.monitoringEnabled)
         return;
-    }
+    if (! [self isMonitoringCapable])
+        return;
     if (self.isMonitoring) {
         return;
     }
-    
     NSLog(@"Start monitoring");
     for (ESBeaconRegion *region in self.regions) {
         [_locationManager startMonitoringForRegion:region];
@@ -312,11 +324,18 @@
 {
     NSLog(@"peripheralManagerDidUpdateState: %@", [self peripheralStateString:peripheral.state]);
 
+    if ([self isMonitoringCapable]) {
+        [self startMonitoringAllRegion];
+    } else {
+        [self stopMonitoringAllRegion];
+    }
+    
+    [self updateMonitoringStatus];
+    
     if ([_delegate respondsToSelector:@selector(didUpdatePeripheralState:)]) {
         [_delegate didUpdatePeripheralState:peripheral.state];
     }
 
-    [self updateMonitoringStatus];
 }
 
 #pragma mark -
@@ -428,10 +447,17 @@
 {
     NSLog(@"didChangeAuthorizationStatus:%@", [self locationAuthorizationStatusString:status]);
 
+    if ([self isMonitoringCapable]) {
+        [self startMonitoringAllRegion];
+    } else {
+        [self stopMonitoringAllRegion];
+    }
+
+    [self updateMonitoringStatus];
+    
     if ([_delegate respondsToSelector:@selector(didUpdateAuthorizationStatus:)]) {
         [_delegate didUpdateAuthorizationStatus:status];
     }
-    [self updateMonitoringStatus];
 }
 
 @end

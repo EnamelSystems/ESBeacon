@@ -33,6 +33,9 @@
         region.rangingEnabled = YES;
     }
 
+    // To enable automatic start, uncomment this line.
+    //[self.beacon startMonitoring];
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
@@ -51,9 +54,9 @@
 - (IBAction)monitoringButtonPressed:(id)sender {
     NSLog(@"Monitoring button pressed");
     if (_monitoringStatus == kESBeaconMonitoringStatusStopped) {
-        [self.beacon startMonitoringAllRegion];
+        [self.beacon startMonitoring];
     } else if (_monitoringStatus == kESBeaconMonitoringStatusMonitoring) {
-        [self.beacon stopMonitoringAllRegion];
+        [self.beacon stopMonitoring];
     }
 }
 
