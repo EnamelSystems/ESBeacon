@@ -113,11 +113,16 @@
     }
     NSLog(@"Start monitoring");
     for (ESBeaconRegion *region in self.regions) {
-        [_locationManager startMonitoringForRegion:region];
-        region.isMonitoring = YES;
+        [self startMonitoring:region];
     }
     self.isMonitoring = YES;
     [self updateMonitoringStatus];
+}
+
+- (void)startMonitoring:(ESBeaconRegion *)region
+{
+    [_locationManager startMonitoringForRegion:region];
+    region.isMonitoring = YES;
 }
 
 - (void)stopMonitoringAllRegion
@@ -330,12 +335,11 @@
         [self stopMonitoringAllRegion];
     }
     
-    [self updateMonitoringStatus];
-    
     if ([_delegate respondsToSelector:@selector(didUpdatePeripheralState:)]) {
         [_delegate didUpdatePeripheralState:peripheral.state];
     }
 
+    [self updateMonitoringStatus];
 }
 
 #pragma mark -
@@ -400,6 +404,10 @@
             return;
         [self stopMonitoring:esRegion];
     }
+    
+    // Retry once again for monitoring.
+    _isMonitoring = NO;
+    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(startMonitoringAllRegion) userInfo:nil repeats:NO];
 }
 
 #pragma mark CLLocationManagerDelegate (Responding to Ranging Events)
@@ -453,11 +461,11 @@
         [self stopMonitoringAllRegion];
     }
 
-    [self updateMonitoringStatus];
-    
     if ([_delegate respondsToSelector:@selector(didUpdateAuthorizationStatus:)]) {
         [_delegate didUpdateAuthorizationStatus:status];
     }
+
+    [self updateMonitoringStatus];
 }
 
 @end
