@@ -13,4 +13,6 @@
 @property (nonatomic) BOOL isMonitoring;
 @property (nonatomic) BOOL hasEntered;
 @property (nonatomic) BOOL isRanging;
+@property (nonatomic) NSArray *beacons;
+- (void)clearFlags;
 @end

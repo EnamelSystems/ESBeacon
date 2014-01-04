@@ -61,18 +61,14 @@
 #pragma mark applicationDidBecomActive local notification handler.
 - (void)applicationDidBecomeActive
 {
-    NSLog(@"Application did become active");
-    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(checkRegionStateTimer:) userInfo:nil repeats:NO];
+    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(checkRegionState:) userInfo:nil repeats:NO];
 }
 
-- (void)checkRegionStateTimer:(NSTimer *)timer
+- (void)checkRegionState:(NSTimer *)timer
 {
-    NSLog(@"timer called");
-
     // Update current region status when application did become active.
     for (ESBeaconRegion *region in self.regions) {
         if (region.isMonitoring) {
-            NSLog(@"requestStateForRegion %@", region);
             [_locationManager requestStateForRegion:region];
         }
     }
@@ -99,7 +95,7 @@
     if (![self isMonitoringCapable]) {
         return;
     }
-    if (_isMonitoring) {
+    if (self.isMonitoring) {
         return;
     }
     
@@ -108,24 +104,23 @@
         [_locationManager startMonitoringForRegion:region];
         region.isMonitoring = YES;
     }
-    
-    _isMonitoring = YES;
+    self.isMonitoring = YES;
     [self updateMonitoringStatus];
 }
 
 - (void)stopMonitoring
 {
-    NSLog(@"Stop monitoring");
-    if (! _isMonitoring) {
+    if (! self.isMonitoring) {
         return;
     }
+
+    NSLog(@"Stop monitoring");
     for (ESBeaconRegion *region in self.regions) {
         [_locationManager stopMonitoringForRegion:region];
-        [_locationManager stopRangingBeaconsInRegion:region];
+        [self stopRanging:region];
         region.isMonitoring = NO;
     }
-
-    _isMonitoring = NO;
+    self.isMonitoring = NO;
     [self updateMonitoringStatus];
 }
 
@@ -170,32 +165,55 @@
 - (void)startRanging:(ESBeaconRegion *)region
 {
     NSLog(@"startRanging");
-    [_locationManager startRangingBeaconsInRegion:region];
+    if (! region.isRanging) {
+        [_locationManager startRangingBeaconsInRegion:region];
+        region.isRanging = YES;
+    }
 }
 
 - (void)stopRanging:(ESBeaconRegion *)region
 {
     NSLog(@"stopRanging");
-    [_locationManager stopRangingBeaconsInRegion:region];
+    if (region.isRanging) {
+        [_locationManager stopRangingBeaconsInRegion:region];
+        region.beacons = nil;
+        region.isRanging = NO;
+    }
 }
 
 #pragma mark -
 #pragma mark Region management
-- (BOOL)registerRegion:(NSString *)UUIDString identifier:(NSString *)identifier rangingEnabled:(BOOL)rangingEnabled
+- (ESBeaconRegion *)registerRegion:(NSString *)UUIDString identifier:(NSString *)identifier
 {
     if ([self.regions count] >= kESBeaconRegionMax) {
-        return NO;
+        return nil;
     }
-    
     ESBeaconRegion *region = [[ESBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:UUIDString] identifier:identifier];
-    region.rangingEnabled = rangingEnabled;
-    region.isMonitoring = NO;
-    region.hasEntered = NO;
-    region.isRanging = NO;
+    [region clearFlags];
     [self.regions addObject:region];
-    NSLog(@"Region registered: %@", region);
+    return region;
+}
 
-    return YES;
+- (ESBeaconRegion *)registerRegion:(NSString *)UUIDString major:(CLBeaconMajorValue)major identifier:(NSString *)identifier
+{
+    if ([self.regions count] >= kESBeaconRegionMax) {
+        return nil;
+    }
+    ESBeaconRegion *region = [[ESBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:UUIDString] major:major identifier:identifier];
+    [region clearFlags];
+    [self.regions addObject:region];
+    return region;
+}
+
+- (ESBeaconRegion *)registerRegion:(NSString *)UUIDString major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor identifier:(NSString *)identifier
+{
+    if ([self.regions count] >= kESBeaconRegionMax) {
+        return nil;
+    }
+    ESBeaconRegion *region = [[ESBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:UUIDString] major:major minor:minor identifier:identifier];
+    [region clearFlags];
+    [self.regions addObject:region];
+    return region;
 }
 
 - (void)unregisterRegion:(NSUUID *)proximityUUID identifier:(NSString *)identifier
@@ -231,18 +249,28 @@
 {
     NSLog(@"enterRegion called");
     
+    // Need to have ESBeaconRegion.
     ESBeaconRegion *esRegion = [self lookupRegion:region];
     if (! esRegion) {
         NSLog(@"enterRegion: Can't find ESBeaconRegion");
         return;
     }
         
-    if (! esRegion.hasEntered) {
-        if (esRegion.rangingEnabled) {
-            [self startRanging:esRegion];
-        }
-        [self enterRegionNotification:esRegion];
-        esRegion.hasEntered = YES;
+    // Already in the region.
+    if (esRegion.hasEntered)
+        return;
+
+    // If ranging is enabled, start ranging.
+    if (esRegion.rangingEnabled)
+        [self startRanging:esRegion];
+
+    // If application is not active, display enter region local notification.
+    [self enterRegionNotification:esRegion];
+
+    // Mark as entered.
+    esRegion.hasEntered = YES;
+    if ([_delegate respondsToSelector:@selector(didUpdateRegionEnterOrExit:)]) {
+        [_delegate didUpdateRegionEnterOrExit:esRegion];
     }
 }
 
@@ -256,11 +284,15 @@
         return;
     }
 
-    if (esRegion.hasEntered) {
-        if (esRegion.rangingEnabled) {
-            [self stopRanging:esRegion];
-        }
-        esRegion.hasEntered = NO;
+    if (! esRegion.hasEntered)
+        return;
+
+    if (esRegion.rangingEnabled)
+        [self stopRanging:esRegion];
+
+    esRegion.hasEntered = NO;
+    if ([_delegate respondsToSelector:@selector(didUpdateRegionEnterOrExit:)]) {
+        [_delegate didUpdateRegionEnterOrExit:esRegion];
     }
 }
 
@@ -361,6 +393,16 @@
         NSLog(@"didRangeBeacons: count 0");
     } else {
         NSLog(@"didRangeBeacons: count %lu", (unsigned long)[beacons count]);
+    }
+    ESBeaconRegion *esRegion = [self lookupRegion:region];
+    if (!esRegion) {
+        NSLog(@"exitRegion: Can't find ESBeaconRegion for %@", region);
+        return;
+    }
+    esRegion.beacons = beacons;
+    
+    if ([_delegate respondsToSelector:@selector(didRangeBeacons:)]) {
+        [_delegate didRangeBeacons:esRegion];
     }
 }
 

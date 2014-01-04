@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F51E4C541877D154006A5307 /* green.png in Resources */ = {isa = PBXBuildFile; fileRef = F51E4C531877D154006A5307 /* green.png */; };
+		F51E4C561877D158006A5307 /* red.png in Resources */ = {isa = PBXBuildFile; fileRef = F51E4C551877D158006A5307 /* red.png */; };
 		F584CA0C1867F6A600CD518E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F584CA0B1867F6A600CD518E /* Foundation.framework */; };
 		F584CA0E1867F6A600CD518E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F584CA0D1867F6A600CD518E /* CoreGraphics.framework */; };
 		F584CA101867F6A600CD518E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F584CA0F1867F6A600CD518E /* UIKit.framework */; };
@@ -39,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F51E4C531877D154006A5307 /* green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = green.png; path = Resources/green.png; sourceTree = SOURCE_ROOT; };
+		F51E4C551877D158006A5307 /* red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = red.png; path = Resources/red.png; sourceTree = SOURCE_ROOT; };
 		F584CA081867F6A600CD518E /* ESBeacon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ESBeacon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F584CA0B1867F6A600CD518E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F584CA0D1867F6A600CD518E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -149,6 +153,8 @@
 			isa = PBXGroup;
 			children = (
 				F5F0DFAC187778170055FD9D /* icon.png */,
+				F51E4C531877D154006A5307 /* green.png */,
+				F51E4C551877D158006A5307 /* red.png */,
 				F584CA131867F6A600CD518E /* ESBeacon-Info.plist */,
 				F584CA141867F6A600CD518E /* InfoPlist.strings */,
 				F584CA171867F6A600CD518E /* main.m */,
@@ -270,6 +276,8 @@
 				F584CA221867F6A600CD518E /* Main_iPad.storyboard in Resources */,
 				F5F0DFAD187778170055FD9D /* icon.png in Resources */,
 				F584CA271867F6A600CD518E /* Images.xcassets in Resources */,
+				F51E4C541877D154006A5307 /* green.png in Resources */,
+				F51E4C561877D158006A5307 /* red.png in Resources */,
 				F584CA1F1867F6A600CD518E /* Main_iPhone.storyboard in Resources */,
 				F584CA161867F6A600CD518E /* InfoPlist.strings in Resources */,
 			);

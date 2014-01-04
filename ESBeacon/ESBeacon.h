@@ -25,6 +25,9 @@ typedef enum {
 - (void)didUpdatePeripheralState:(CBPeripheralManagerState)state;
 - (void)didUpdateAuthorizationStatus:(CLAuthorizationStatus)status;
 - (void)didUpdateMonitoringStatus:(ESBeaconMonitoringStatus)status;
+
+- (void)didUpdateRegionEnterOrExit:(ESBeaconRegion *)region;
+- (void)didRangeBeacons:(ESBeaconRegion *)region;
 @end
 
 @interface ESBeacon : NSObject <CBPeripheralManagerDelegate, CLLocationManagerDelegate>
@@ -35,5 +38,7 @@ typedef enum {
 - (void)requestUpdateForStatus;
 - (void)startMonitoring;
 - (void)stopMonitoring;
-- (BOOL)registerRegion:(NSString *)UUIDString identifier:(NSString *)identifier rangingEnabled:(BOOL)rangingEnabled;
+- (ESBeaconRegion *)registerRegion:(NSString *)UUIDString identifier:(NSString *)identifier;
+- (ESBeaconRegion *)registerRegion:(NSString *)UUIDString major:(CLBeaconMajorValue)major identifier:(NSString *)identifier;
+- (ESBeaconRegion *)registerRegion:(NSString *)UUIDString major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor identifier:(NSString *)identifier;
 @end

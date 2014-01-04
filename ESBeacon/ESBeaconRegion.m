@@ -18,4 +18,13 @@
     return self;
 }
 
+- (void)clearFlags
+{
+    self.rangingEnabled = NO;
+    self.isMonitoring = NO;
+    self.hasEntered = NO;
+    self.isRanging = NO;
+    self.beacons = nil;
+}
+
 @end
