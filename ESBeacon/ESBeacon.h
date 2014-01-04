@@ -36,8 +36,8 @@ typedef enum {
 
 + (ESBeacon *)sharedManager;
 - (void)requestUpdateForStatus;
-- (void)startMonitoring;
-- (void)stopMonitoring;
+- (void)startMonitoringAllRegion;
+- (void)stopMonitoringAllRegion;
 - (ESBeaconRegion *)registerRegion:(NSString *)UUIDString identifier:(NSString *)identifier;
 - (ESBeaconRegion *)registerRegion:(NSString *)UUIDString major:(CLBeaconMajorValue)major identifier:(NSString *)identifier;
 - (ESBeaconRegion *)registerRegion:(NSString *)UUIDString major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor identifier:(NSString *)identifier;

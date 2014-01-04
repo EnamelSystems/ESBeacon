@@ -90,7 +90,7 @@
     return YES;
 }
 
-- (void)startMonitoring
+- (void)startMonitoringAllRegion
 {
     if (![self isMonitoringCapable]) {
         return;
@@ -108,20 +108,30 @@
     [self updateMonitoringStatus];
 }
 
-- (void)stopMonitoring
+- (void)stopMonitoringAllRegion
 {
     if (! self.isMonitoring) {
         return;
     }
-
     NSLog(@"Stop monitoring");
     for (ESBeaconRegion *region in self.regions) {
-        [_locationManager stopMonitoringForRegion:region];
-        [self stopRanging:region];
-        region.isMonitoring = NO;
+        [self stopMonitoring:region];
     }
     self.isMonitoring = NO;
     [self updateMonitoringStatus];
+}
+
+- (void)stopMonitoring:(ESBeaconRegion *)region
+{
+    [_locationManager stopMonitoringForRegion:region];
+    [self stopRanging:region];
+    region.isMonitoring = NO;
+    if (region.hasEntered) {
+        region.hasEntered = NO;
+        if ([_delegate respondsToSelector:@selector(didUpdateRegionEnterOrExit:)]) {
+            [_delegate didUpdateRegionEnterOrExit:region];
+        }
+    }
 }
 
 - (ESBeaconMonitoringStatus)getUpdatedMonitoringStatus
@@ -234,38 +244,22 @@
     return nil;
 }
 
-- (void)enterRegionNotification:(ESBeaconRegion *)region
-{
-    // LocalNotification.
-    if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive) {
-        UILocalNotification *notification = [[UILocalNotification alloc] init];
-        //notification.alertBody = region.proximityUUID.UUIDString;
-        notification.alertBody = region.identifier;
-        [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-    }
-}
-
 - (void)enterRegion:(CLBeaconRegion *)region
 {
     NSLog(@"enterRegion called");
     
-    // Need to have ESBeaconRegion.
+    // Lookup ESBeaconRegion.
     ESBeaconRegion *esRegion = [self lookupRegion:region];
-    if (! esRegion) {
-        NSLog(@"enterRegion: Can't find ESBeaconRegion");
+    if (! esRegion)
         return;
-    }
-        
+    
     // Already in the region.
     if (esRegion.hasEntered)
         return;
 
-    // If ranging is enabled, start ranging.
+    // When ranging is enabled, start ranging.
     if (esRegion.rangingEnabled)
         [self startRanging:esRegion];
-
-    // If application is not active, display enter region local notification.
-    [self enterRegionNotification:esRegion];
 
     // Mark as entered.
     esRegion.hasEntered = YES;
@@ -279,10 +273,8 @@
     NSLog(@"exitRegion called");
     
     ESBeaconRegion *esRegion = [self lookupRegion:region];
-    if (! esRegion) {
-        NSLog(@"exitRegion: Can't find ESBeaconRegion");
+    if (! esRegion)
         return;
-    }
 
     if (! esRegion.hasEntered)
         return;
@@ -331,13 +323,12 @@
 #pragma mark CLLocationManagerDelegate (Responding to Region Events)
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
 {
-    NSLog(@"didStartMonitoringForRegion %@", region);
+    NSLog(@"didStartMonitoringForRegion:%@", region.identifier);
     [self.locationManager requestStateForRegion:region];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {
-    NSLog(@"Enter the region: %@", region);
     if ([region isKindOfClass:[CLBeaconRegion class]]) {
         [self enterRegion:(CLBeaconRegion *)region];
     }
@@ -345,7 +336,6 @@
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
-    NSLog(@"Exit the region: %@", region);
     if ([region isKindOfClass:[CLBeaconRegion class]]) {
         [self exitRegion:(CLBeaconRegion *)region];
     }
@@ -366,39 +356,40 @@
 
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
 {
-    NSLog(@"didDetermineState %@ %@", [self regionStateString:state], region);
+    NSLog(@"didDetermineState:%@(%@)", [self regionStateString:state], region.identifier);
 
     if ([region isKindOfClass:[CLBeaconRegion class]]) {
         switch (state) {
-        case CLRegionStateInside:
-            [self enterRegion:(CLBeaconRegion *)region];
-            break;
-        case CLRegionStateOutside:
-        case CLRegionStateUnknown:
-            [self exitRegion:(CLBeaconRegion *)region];
-            break;
+            case CLRegionStateInside:
+                [self enterRegion:(CLBeaconRegion *)region];
+                break;
+            case CLRegionStateOutside:
+            case CLRegionStateUnknown:
+                [self exitRegion:(CLBeaconRegion *)region];
+                break;
         }
     }
 }
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
 {
-    NSLog(@"monitoringDidFailForRegion %@", error);
+    NSLog(@"monitoringDidFailForRegion:%@(%@)", region.identifier, error);
+    
+    if ([region isKindOfClass:[CLBeaconRegion class]]) {
+        ESBeaconRegion *esRegion = [self lookupRegion:(CLBeaconRegion *)region];
+        if (! esRegion)
+            return;
+        [self stopMonitoring:esRegion];
+    }
 }
 
 #pragma mark CLLocationManagerDelegate (Responding to Ranging Events)
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
-    if (! beacons) {
-        NSLog(@"didRangeBeacons: count 0");
-    } else {
-        NSLog(@"didRangeBeacons: count %lu", (unsigned long)[beacons count]);
-    }
     ESBeaconRegion *esRegion = [self lookupRegion:region];
-    if (!esRegion) {
-        NSLog(@"exitRegion: Can't find ESBeaconRegion for %@", region);
+    if (! esRegion)
         return;
-    }
+
     esRegion.beacons = beacons;
     
     if ([_delegate respondsToSelector:@selector(didRangeBeacons:)]) {
@@ -408,13 +399,12 @@
 
 - (void)locationManager:(CLLocationManager *)manager rangingBeaconsDidFailForRegion:(CLBeaconRegion *)region withError:(NSError *)error
 {
-    NSLog(@"rangingBeaconsDidFailForRegion: %@", error);
+    NSLog(@"rangingBeaconsDidFailForRegion:%@(%@)", region.identifier, error);
     
     ESBeaconRegion *esRegion = [self lookupRegion:region];
-    if (!esRegion) {
-        NSLog(@"exitRegion: Can't find ESBeaconRegion for %@", region);
+    if (! esRegion)
         return;
-    }
+
     [self stopRanging:esRegion];
 }
 
@@ -436,12 +426,11 @@
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
-    NSLog(@"locationManager didChangeAuthorizationStatus %@", [self locationAuthorizationStatusString:status]);
+    NSLog(@"didChangeAuthorizationStatus:%@", [self locationAuthorizationStatusString:status]);
 
     if ([_delegate respondsToSelector:@selector(didUpdateAuthorizationStatus:)]) {
         [_delegate didUpdateAuthorizationStatus:status];
     }
-
     [self updateMonitoringStatus];
 }
 

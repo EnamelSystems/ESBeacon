@@ -51,9 +51,9 @@
 - (IBAction)monitoringButtonPressed:(id)sender {
     NSLog(@"Monitoring button pressed");
     if (_monitoringStatus == kESBeaconMonitoringStatusStopped) {
-        [self.beacon startMonitoring];
+        [self.beacon startMonitoringAllRegion];
     } else if (_monitoringStatus == kESBeaconMonitoringStatusMonitoring) {
-        [self.beacon stopMonitoring];
+        [self.beacon stopMonitoringAllRegion];
     }
 }
 
@@ -126,15 +126,45 @@
     }
 }
 
+- (void)enterRegionNotification:(ESBeaconRegion *)region
+{
+    // LocalNotification.
+    if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive) {
+        UILocalNotification *notification = [[UILocalNotification alloc] init];
+        notification.alertBody = [NSString stringWithFormat:@"Entered to %@", region.identifier];
+        [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+    }
+}
+
+- (void)exitRegionNotification:(ESBeaconRegion *)region
+{
+    // LocalNotification.
+    if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive) {
+        UILocalNotification *notification = [[UILocalNotification alloc] init];
+        notification.alertBody = [NSString stringWithFormat:@"Exit from %@", region.identifier];
+        [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+    }
+}
+
 - (void)didUpdateRegionEnterOrExit:(ESBeaconRegion *)region
 {
-    NSLog(@"didUpdateRegionEnterOrExit: delegate called");
+    if (region.hasEntered) {
+        NSLog(@"didUpdateRegionEnterOrExit: entered");
+        [self enterRegionNotification:region];
+    } else {
+        NSLog(@"didUpdateRegionEnterOrExit: exit");
+        [self exitRegionNotification:region];
+    }
     [_tableView reloadData];
 }
 
 - (void)didRangeBeacons:(ESBeaconRegion *)region
 {
-    NSLog(@"didRangeBeacons: delegate called");
+    if (! region.beacons) {
+        NSLog(@"didRangeBeacons: count 0");
+    } else {
+        NSLog(@"didRangeBeacons: count %lu", (unsigned long)[region.beacons count]);
+    }
     [_tableView reloadData];
 }
 
