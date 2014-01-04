@@ -34,7 +34,7 @@
     }
 
     // To enable automatic start, uncomment this line.
-    [self.beacon startMonitoring];
+    //[self.beacon startMonitoring];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
