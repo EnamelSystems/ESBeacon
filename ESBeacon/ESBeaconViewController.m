@@ -31,6 +31,10 @@
     region = [self.beacon registerRegion:kBeaconUUID identifier:kIdentifier];
     if (region) {
         region.rangingEnabled = YES;
+        // Sample code for notifyEntryStateOnDisplay.
+        //region.notifyOnEntry = NO;
+        //region.notifyEntryStateOnDisplay = YES;
+        //region.notifyOnExit = YES;
     }
 
     // To enable automatic start, uncomment this line.
