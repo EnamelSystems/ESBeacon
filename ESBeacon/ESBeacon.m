@@ -113,16 +113,21 @@
     }
     NSLog(@"Start monitoring");
     for (ESBeaconRegion *region in self.regions) {
-        [self startMonitoring:region];
+        [self startMonitoringRegion:region];
     }
     self.isMonitoring = YES;
     [self updateMonitoringStatus];
 }
 
-- (void)startMonitoring:(ESBeaconRegion *)region
+- (void)startMonitoringRegion:(ESBeaconRegion *)region
 {
     [_locationManager startMonitoringForRegion:region];
     region.isMonitoring = YES;
+}
+
+- (void)startMonitoringRegionTry:(NSTimer *)timer
+{
+    [self startMonitoringRegion:(ESBeaconRegion *)timer.userInfo];
 }
 
 - (void)stopMonitoringAllRegion
@@ -132,13 +137,13 @@
     }
     NSLog(@"Stop monitoring");
     for (ESBeaconRegion *region in self.regions) {
-        [self stopMonitoring:region];
+        [self stopMonitoringRegion:region];
     }
     self.isMonitoring = NO;
     [self updateMonitoringStatus];
 }
 
-- (void)stopMonitoring:(ESBeaconRegion *)region
+- (void)stopMonitoringRegion:(ESBeaconRegion *)region
 {
     [_locationManager stopMonitoringForRegion:region];
     [self stopRanging:region];
@@ -347,6 +352,14 @@
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
 {
     NSLog(@"didStartMonitoringForRegion:%@", region.identifier);
+    
+    if ([region isKindOfClass:[CLBeaconRegion class]]) {
+        ESBeaconRegion *esBeacon = [self lookupRegion:(CLBeaconRegion *)region];
+        if (esBeacon) {
+            esBeacon.failCount = 0;
+        }
+    }
+
     [self.locationManager requestStateForRegion:region];
 }
 
@@ -402,12 +415,14 @@
         ESBeaconRegion *esRegion = [self lookupRegion:(CLBeaconRegion *)region];
         if (! esRegion)
             return;
-        [self stopMonitoring:esRegion];
+
+        [self stopMonitoringRegion:esRegion];
+        
+        if (esRegion.failCount < ESBeaconRegionFailCountMax) {
+            esRegion.failCount++;
+            [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(startMonitoringRegionTry:) userInfo:esRegion repeats:NO];
+        }
     }
-    
-    // Retry once again for monitoring.
-    _isMonitoring = NO;
-    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(startMonitoringAllRegion) userInfo:nil repeats:NO];
 }
 
 #pragma mark CLLocationManagerDelegate (Responding to Ranging Events)

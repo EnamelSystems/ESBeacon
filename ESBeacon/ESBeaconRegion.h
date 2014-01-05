@@ -8,11 +8,14 @@
 
 #import <CoreLocation/CoreLocation.h>
 
+#define ESBeaconRegionFailCountMax   3
+
 @interface ESBeaconRegion : CLBeaconRegion
 @property (nonatomic) BOOL rangingEnabled;
 @property (nonatomic) BOOL isMonitoring;
 @property (nonatomic) BOOL hasEntered;
 @property (nonatomic) BOOL isRanging;
+@property (nonatomic) NSUInteger failCount;
 @property (nonatomic) NSArray *beacons;
 - (void)clearFlags;
 @end

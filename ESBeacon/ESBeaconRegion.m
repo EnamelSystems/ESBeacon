@@ -24,6 +24,7 @@
     self.isMonitoring = NO;
     self.hasEntered = NO;
     self.isRanging = NO;
+    self.failCount = 0;
     self.beacons = nil;
 }
 
