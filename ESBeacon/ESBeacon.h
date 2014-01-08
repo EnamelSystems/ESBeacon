@@ -41,4 +41,5 @@ typedef enum {
 - (ESBeaconRegion *)registerRegion:(NSString *)UUIDString identifier:(NSString *)identifier;
 - (ESBeaconRegion *)registerRegion:(NSString *)UUIDString major:(CLBeaconMajorValue)major identifier:(NSString *)identifier;
 - (ESBeaconRegion *)registerRegion:(NSString *)UUIDString major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor identifier:(NSString *)identifier;
+- (void)unregisterAllRegion;
 @end

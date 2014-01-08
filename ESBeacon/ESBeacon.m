@@ -248,9 +248,10 @@
     return region;
 }
 
-- (void)unregisterRegion:(NSUUID *)proximityUUID identifier:(NSString *)identifier
+- (void)unregisterAllRegion
 {
-    ;
+    [self stopMonitoring];
+    [self.regions removeAllObjects];
 }
 
 - (ESBeaconRegion *)lookupRegion:(CLBeaconRegion *)region
